@@ -12,13 +12,13 @@ def fast_mod_exp(x,n,p):
 	if n == 1:
 		return x % p
 	if n % 2 == 0:
-		return fast_mod_exp(x**2 % p,n/2,p)
+		return (fast_mod_exp(x, n/2, p) ** 2) % p
 	else:	
-		return (x % p) * fast_mod_exp(x**2 % p,(n-1)/2,p)
+		return (x * (fast_mod_exp(x,(n-1)/2,p) ** 2 )) % p
 
 # print("result = ", fast_exp(1233312,33112))
 x = 121
-n = 52
+n = 534231
 p = 1343
 print("result = ", fast_mod_exp(x,n,p) ==(x**n) %p)
 
