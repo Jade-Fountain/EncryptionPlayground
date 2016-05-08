@@ -1,25 +1,77 @@
 #mathtools.py
+import random
 
-def fast_exp(x,n):
-	if n == 1:
-		return x
-	if n % 2 == 0:
-		return fast_exp(x**2,n/2)
+def gcd(a,b):
+	if b == 0:
+		return a
 	else:
-		return x * fast_exp(x**2,(n-1)/2)
+		return gcd(b, a % b)
 
-def fast_mod_exp(x,n,p):
-	if n == 1:
-		return x % p
-	if n % 2 == 0:
-		return (fast_mod_exp(x, n/2, p) ** 2) % p
+def fast_exp(x,e):
+	if e == 1:
+		return x
+	if e % 2 == 0:
+		return fast_exp(x**2,e/2)
+	else:
+		return x * fast_exp(x**2,(e-1)/2)
+
+def fast_mod_exp(x,e,n):
+	if e == 1:
+		return x % n
+	if e % 2 == 0:
+		return (fast_mod_exp(x, e/2, n) ** 2) % n
 	else:	
-		return (x * (fast_mod_exp(x,(n-1)/2,p) ** 2 )) % p
+		return (x * (fast_mod_exp(x,(e-1)/2,n) ** 2 )) % n
 
-# print("result = ", fast_exp(1233312,33112))
-x = 121
-n = 534231
-p = 1343
-print("result = ", fast_mod_exp(x,n,p) ==(x**n) %p)
+def is_prime(n):
+	if n <= 1:
+		return False
+	elif n <= 3:
+		return True
+	elif n % 2 == 0 or n % 3 == 0:
+		return False
+	i = 5
+	while i*i <= n:
+		#search through integers of form 6k+-1
+		if n % i == 0 or n % (i + 2) == 0:
+			return False
+		i = i + 6
+	return True
 
+def get_next_prime(min_p):
+	#todo: optimise
+	p = min_p
+	while not is_prime(p):
+		print(p, "is NOT prime")
+		if p%2 == 0:
+			p += 1
+		else:
+			p+=2
+	return p
 
+def get_next_coprime(min_p,q):
+	#todo: optimise
+	p = min_p
+	while (gcd(p,q) != 1):
+		print(p, "is NOT prime")
+		p += 1
+		if p >= q:
+			return 1
+	return p
+
+def generateRSAKeys(min_p):
+	#generate n
+	p = get_next_prime(min_p)
+	#todo: improve generation of q
+	q = get_next_prime(p + 1)
+	n = p * q
+	print("n =", n, " = ", p, " * ", q)
+
+	#Euler's Totient
+	phi_n = n - (p+q+1)
+
+	#generate e st gcd(e,phi_n) == 1
+	e_start = random.randint(1,phi_n)
+	e = get_next_coprime(e_start, phi_n)
+	print("e = ", e)
+	return n,e,1
