@@ -59,6 +59,10 @@ def get_next_coprime(min_p,q):
 			return 1
 	return p
 
+def multiplicative_mod_inv(a,n):
+	#compute b : a*b = 1 mod n
+	return 1
+
 def generateRSAKeys(min_p):
 	#generate n
 	p = get_next_prime(min_p)
@@ -71,7 +75,11 @@ def generateRSAKeys(min_p):
 	phi_n = n - (p+q+1)
 
 	#generate e st gcd(e,phi_n) == 1
+	#TODO: minimise bit-length and hamming weight of e
 	e_start = random.randint(1,phi_n)
 	e = get_next_coprime(e_start, phi_n)
 	print("e = ", e)
-	return n,e,1
+
+	#d is s.t. d*e = 1 mod phi_n 
+	d = multiplicative_mod_inv(e,phi_n)
+	return n,e,d
