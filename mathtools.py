@@ -1,11 +1,36 @@
 #mathtools.py
 import random
 
+
 def gcd(a,b):
 	if b == 0:
 		return a
 	else:
 		return gcd(b, a % b)
+
+def extended_gcd(a, b):
+    s = 0
+    old_s = 1
+    t = 1
+    old_t = 0
+    r = b
+    old_r = a
+    while r != 0:
+        quotient = old_r / r
+        old_r, r = r, old_r - quotient * r
+        old_s, s = s, old_s - quotient * s
+        old_t, t = t, old_t - quotient * t
+    # output "Bezout coefficients:", (old_s, old_t)
+    # output "greatest common divisor:", old_r
+    # output "quotients by the gcd:", (t, s)
+    return (old_s, old_t, old_r, t, s)
+
+
+def multiplicative_mod_inv(a,n):
+	#compute b : a*b = 1 mod n
+	x, y, gcd, t,s = extended_gcd(a,n)
+
+	return x
 
 def fast_exp(x,e):
 	if e == 1:
@@ -42,7 +67,7 @@ def get_next_prime(min_p):
 	#todo: optimise
 	p = min_p
 	while not is_prime(p):
-		print(p, "is NOT prime")
+		# print(p, "is NOT prime")
 		if p%2 == 0:
 			p += 1
 		else:
@@ -53,15 +78,22 @@ def get_next_coprime(min_p,q):
 	#todo: optimise
 	p = min_p
 	while (gcd(p,q) != 1):
-		print(p, "is NOT prime")
+		print(p, "is NOT co-prime to ", q)
 		p += 1
-		if p >= q:
+		if p > q:
 			return 1
 	return p
 
-def multiplicative_mod_inv(a,n):
-	#compute b : a*b = 1 mod n
-	return 1
+#count coprimes of n
+def eulers_totient(n):
+	print("Eulers totient:" ,n)
+	i = 1
+	count = 1 #always count 1 and n
+	# while i < n:
+	# 	i = get_next_coprime(i + 1,n)
+	# 	count += 1
+	# 	print("Eulers totient = ", 	count)
+	return count
 
 def generateRSAKeys(min_p):
 	#generate n
